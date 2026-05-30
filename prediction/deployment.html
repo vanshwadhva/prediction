@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Svashasan OS Deployment Compute Architecture Plan</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: [
+                            'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto',
+                            'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'
+                        ]
+                    },
+                    colors: {
+                        mobileyeBlue: '#1e2eb8',
+                        mobileyeLightBlue: '#5b69ff',
+                        mobileyePurple: '#98a1ff',
+                        mobileyePink: '#eacddb',
+                        mobileyeGray: '#efebed',
+                        svashasanMint: '#00d4aa'
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        .responsive-table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .doc-section {
+            scroll-margin-top: 100px;
+        }
+
+        /* Unified spectrum gradient for final metrics */
+        .spectrum-bar {
+            height: 6px;
+            background: linear-gradient(90deg, #1e2eb8, #5b69ff 37%, #00d4aa 69%, #eacddb);
+            border-radius: 23px;
+        }
+
+        /* Monochrome gray icon palette */
+        main [data-lucide],
+        section [data-lucide] {
+            color: #6b7280 !important;
+            stroke: #6b7280 !important;
+        }
+    </style>
+</head>
+
+<body class="text-gray-800 bg-gray-50 min-h-screen flex flex-col">
+
+    <!-- Header (Aligned with prediction webpage) -->
+    <header class="bg-white/90 backdrop-blur-md py-4 border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6 flex justify-between items-center max-w-7xl">
+            <!-- Brand Area -->
+            <a href="https://svashasan.com/" class="flex-shrink-0">
+                <img src="2.png" alt="Svashasan Logo" class="h-10 w-auto object-contain">
+            </a>
+
+            <nav class="flex items-center space-x-8">
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <div class="relative flex items-center">
+                        <i data-lucide="search"
+                            class="w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                        <input id="search-input" type="text" placeholder="Search..."
+                            class="w-28 sm:w-32 focus:w-40 sm:focus:w-48 pl-8 pr-3 py-1.5 bg-gray-50 border border-transparent focus:bg-white focus:border-gray-200 rounded-full text-sm transition-all duration-300 outline-none">
+                    </div>
+                    <a href="https://svashasan.com/support" target="_blank" class="flex items-center">
+                        <i data-lucide="help-circle"
+                            class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+
+    <!-- Title Section (Professional Deep Slate Theme) -->
+    <section class="bg-transparent text-gray-900 pt-16 pb-14 border-b border-gray-200">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+                <span class="px-3 py-1 bg-white border border-gray-200 text-gray-700 rounded text-xs font-semibold uppercase tracking-wider shadow-sm">TRL 6 Architecture</span>
+                <span class="px-3 py-1 bg-mobileyeBlue/10 text-mobileyeBlue rounded border border-mobileyeBlue/10 text-xs font-semibold uppercase tracking-wider">Internal / Engineering</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold mb-3 tracking-tight">Deployment Compute Architecture Plan</h1>
+            <p class="text-base md:text-lg text-gray-500 font-medium max-w-3xl mb-6 tracking-wide">
+                A heterogeneous, three-tier compute model designed to scale the Svashasan OS stack from in-vehicle real-time safety to optimized cloud validation environments.
+            </p>
+            <div class="flex flex-wrap items-center gap-6 text-xs text-gray-500 border-t border-gray-200 pt-4">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
+                    <span>Prepared by: <strong class="text-gray-800">Svashasan Systems Architecture Group</strong></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-4 h-4 text-gray-500"></i>
+                    <span>Status: <strong class="text-gray-800">Approved for TRL 6-7 Integration</strong></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Main Content Layout -->
+    <div class="container mx-auto px-6 max-w-7xl py-12 flex flex-col lg:flex-row gap-12 flex-grow">
+        
+        <!-- Sidebar Navigation (Table of Contents) -->
+        <aside class="w-full lg:w-1/4 hidden lg:block flex-shrink-0">
+            <div class="sticky top-28 p-6">
+                <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider mb-4">Architecture Menu</h3>
+                <nav class="space-y-1 flex flex-col text-sm text-gray-600">
+                    <a href="#executive" class="py-2 px-3 hover:bg-slate-50 hover:text-mobileyeBlue rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">Executive Summary</a>
+                    <a href="#principles" class="py-2 px-3 hover:bg-slate-50 hover:text-mobileyeBlue rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">1. Core Design Principles</a>
+                    <a href="#tier1" class="py-2 px-3 hover:bg-slate-50 hover:text-mobileyeBlue rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">2. Tier 1: In-Vehicle Edge</a>
+                    <a href="#tier2" class="py-2 px-3 hover:bg-slate-50 hover:text-mobileyeBlue rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">3. Tier 2: Cloud / Simulation</a>
+                    <a href="#tier3" class="py-2 px-3 hover:bg-slate-50 hover:text-mobileyeBlue rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">4. Tier 3: Safety MCU</a>
+                    <a href="#diagram" class="py-2 px-3 hover:bg-slate-50 hover:text-mobileyeBlue rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">5. Inter-Tier Topology Diagram</a>
+                    <a href="#rationale" class="py-2 px-3 hover:bg-slate-50 hover:text-mobileyeBlue rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">6. Heterogeneous Rationale</a>
+                    <a href="#actions" class="py-2 px-3 hover:bg-slate-50 hover:text-mobileyeBlue rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">7. Immediate Actions</a>
+                    <a href="#glossary" class="py-2 px-3 hover:bg-slate-50 hover:text-mobileyeBlue rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">8. Technical Glossary</a>
+                    <a href="#verdict" class="py-2 px-3 font-semibold text-slate-900 mt-2 hover:bg-slate-50 rounded transition-colors border-l-2 border-transparent hover:border-mobileyeBlue">System Verdict</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Document Body -->
+        <main class="w-full lg:w-3/4 max-w-4xl bg-white p-8 md:p-12 rounded-xl border border-gray-200 shadow-sm">
+            
+
+            <!-- Executive Summary -->
+            <section id="executive" class="doc-section mb-16">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-slate-100 rounded text-gray-500"><i data-lucide="layout-dashboard" class="w-6 h-6"></i></div>
+                    <h2 class="text-2xl font-bold text-gray-900">Executive Assessment</h2>
+                </div>
+                
+                <p class="text-base text-gray-600 leading-relaxed mb-8">
+                    This document establishes the official compute architecture model for <strong>Svashasan Labs</strong> at TRL 6. No single instruction set architecture (ISA) meets the contrasting demands of raw model training, low-latency in-vehicle execution, and deterministic fail-safe safety. In response, this design maps specific sub-systems to optimized silicon tiers, balancing performance, reliability, and cost bounds.
+                </p>
+
+                <div class="border border-gray-200 rounded-lg overflow-hidden mb-8">
+                    <div class="responsive-table">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-700 uppercase tracking-wider text-xs border-b border-gray-200">
+                                    <th class="p-4 font-semibold">Tier Metric</th>
+                                    <th class="p-4 font-semibold">Target Hardware</th>
+                                    <th class="p-4 font-semibold">Status</th>
+                                    <th class="p-4 font-semibold">Validation Metric</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-600 divide-y divide-gray-100">
+                                <tr class="hover:bg-slate-50/50">
+                                    <td class="p-4 font-medium text-slate-900">Tier 1: In-Vehicle Edge</td>
+                                    <td class="p-4 font-mono text-xs">NVIDIA Jetson AGX Orin</td>
+                                    <td class="p-4 text-mobileyeBlue font-medium">Approved Target</td>
+                                    <td class="p-4">254 TOPS @ 60W Envelope</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50/50">
+                                    <td class="p-4 font-medium text-slate-900">Tier 2: Cloud Simulation</td>
+                                    <td class="p-4 font-mono text-xs">GCP Spot x86 + AWS Graviton3</td>
+                                    <td class="p-4 text-mobileyeBlue font-medium">Cost Optimized</td>
+                                    <td class="p-4">40%+ Compute Run Savings</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50/50">
+                                    <td class="p-4 font-medium text-slate-900">Tier 3: Safety MCU</td>
+                                    <td class="p-4 font-mono text-xs">ARM Cortex-R52 / RISC-V</td>
+                                    <td class="p-4 text-mobileyeBlue font-medium">Critical Control</td>
+                                    <td class="p-4">ISO 26262 ASIL-D Certified</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 p-6 rounded-lg text-center bg-slate-50">
+                    <p class="text-xl font-bold text-slate-900">Architecture Feasibility Score: <span class="text-mobileyeBlue">9.2 / 10</span></p>
+                    <p class="mt-1 text-slate-500 text-xs uppercase tracking-widest font-semibold">TRL 6 Production Spec | Safe, Ruggedized, High-Yield</p>
+                </div>
+            </section>
+
+            <hr class="border-gray-100 my-12">
+
+
+            <!-- Section 1: Core Design Principles -->
+            <section id="principles" class="doc-section mb-16">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-slate-100 rounded text-gray-500"><i data-lucide="shield-alert" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900">1. Core Design Principles</h3>
+                </div>
+                <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+                    The platform splits core compute execution patterns into three critical operational boundaries to achieve deterministic vehicle response profiles under harsh environmental conditions.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-sm">
+                    <div class="border border-gray-200 p-5 rounded-lg">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Boundary 01</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Isolation of Safety Paths</h4>
+                        <p class="text-xs text-slate-500">Separates AI perception inference pipelines from actuation watchdogs and functional emergency signals.</p>
+                    </div>
+                    <div class="border border-gray-200 p-5 rounded-lg">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Boundary 02</div>
+                        <h4 class="font-bold text-slate-900 mb-1">No Zero-Copy Latency Penalties</h4>
+                        <p class="text-xs text-slate-500">CPU and GPU in-vehicle memory spaces share unified hardware registers to eliminate standard frame transport overheads.</p>
+                    </div>
+                    <div class="border border-gray-200 p-5 rounded-lg">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Boundary 03</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Asymmetric Run Optimization</h4>
+                        <p class="text-xs text-slate-500">Saves massive hardware operations outlays by targeting AWS Graviton3 and GCP spot instances on validation stacks.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border border-gray-200 text-slate-700 px-4 py-3 rounded-lg flex gap-3 items-start text-xs">
+                    <i data-lucide="info" class="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500"></i>
+                    <p>Refer to <strong>"Svashasan OS Deployment Compute Architecture.pdf"</strong> for structural deep-dives and detailed network layout drawings relating to in-vehicle CAN configurations.</p>
+                </div>
+            </section>
+
+            <hr class="border-gray-100 my-12">
+
+
+            <!-- Section 2: Tier 1: In-Vehicle Edge Spec -->
+            <section id="tier1" class="doc-section mb-16">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-slate-100 rounded text-gray-500"><i data-lucide="cpu" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900">2. Tier 1: In-Vehicle Real-Time Edge</h3>
+                </div>
+                <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                    This represents the absolute focus of <strong>Svashasan OS Core</strong>. Real-time perception and immediate driving trajectory decisions execute directly inside the vehicle payload cabinet under strict power constraints.
+                </p>
+
+                <div class="border border-gray-200 rounded-lg overflow-hidden mb-6 text-sm">
+                    <table class="w-full text-left border-collapse bg-white">
+                        <thead class="bg-slate-50 text-xs text-slate-700 uppercase tracking-wider border-b border-gray-200">
+                            <tr><th class="p-4">Specification Parameter</th><th class="p-4">Target Architecture Details</th><th class="p-4 text-center">Status</th></tr>
+                        </thead>
+                        <tbody class="text-gray-600 divide-y divide-gray-100">
+                            <tr>
+                                <td class="p-4 font-medium">Edge Compute Core</td>
+                                <td class="p-4 font-mono text-xs">NVIDIA Jetson AGX Orin (ARM Cortex-A78AE + Ampere GPU)</td>
+                                <td class="p-4 text-center"><i data-lucide="check" class="text-gray-500 w-5 h-5 inline"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium">Memory Management</td>
+                                <td class="p-4">Unified Memory Pool (64GB LPDDR5) - zero-copy GPU memory passing</td>
+                                <td class="p-4 text-center"><i data-lucide="check" class="text-gray-500 w-5 h-5 inline"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium">System Software Base</td>
+                                <td class="p-4">Custom Yocto BSP Layers mapped directly to real-time kernel modules</td>
+                                <td class="p-4 text-center"><i data-lucide="check" class="text-gray-500 w-5 h-5 inline"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium">Autonomous Middleware</td>
+                                <td class="p-4">ROS2 Humble nodes operating on high-speed internal IPC systems</td>
+                                <td class="p-4 text-center"><i data-lucide="check" class="text-gray-500 w-5 h-5 inline"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium">Model Optimization</td>
+                                <td class="p-4">TensorRT compilation utilizing mixed-precision FP16 and INT8</td>
+                                <td class="p-4 text-center"><i data-lucide="check" class="text-gray-500 w-5 h-5 inline"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-red-50 border border-red-200 p-5 rounded-lg text-sm text-red-800">
+                    <div class="flex gap-2 items-start mb-2">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500"></i>
+                        <span class="font-bold">Avoid x86 Architectures inside the Vehicle</span>
+                    </div>
+                    <p class="text-xs text-red-700 leading-relaxed">
+                        x86 CPUs draw upwards of 35W before computing single neural inference frames. They require heavy mechanical active-cooling setups which are highly prone to physical failure in shaking vehicular cabinets. High-power draw and high-vulnerability components should be isolated strictly to Tier 2 environments.
+                    </p>
+                </div>
+            </section>
+
+            <hr class="border-gray-100 my-12">
+
+
+            <!-- Section 3: Tier 2: Cloud / Simulation Spec -->
+            <section id="tier2" class="doc-section mb-16">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-slate-100 rounded text-gray-500"><i data-lucide="cloud" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900">3. Tier 2: Cloud Training &amp; Validation</h3>
+                </div>
+                <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                    Designed to run massive data pipelines, train primary neural models, run high-fidelity simulations (CARLA), and securely serve internal API structures.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="border border-gray-200 p-5 rounded-lg">
+                        <h4 class="font-bold text-slate-900 text-sm mb-2">Simulation &amp; Heavy Training</h4>
+                        <div class="text-xs text-slate-500 space-y-2 leading-relaxed">
+                            <p class="font-semibold text-slate-700">Platform: GCP / x86 Architecture + GPUs</p>
+                            <p><strong>CARLA Simulation:</strong> Run inside GCP <code class="bg-gray-100 px-1 rounded">n2-standard-32</code> environments to process complex, high-frequency single-thread physics.</p>
+                            <p><strong>Primary Deep Training:</strong> Leverages GCP GPU clusters with A100/H100 cards to perform heavy multi-sensor model training loops.</p>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 p-5 rounded-lg">
+                        <h4 class="font-bold text-slate-900 text-sm mb-2">Inference &amp; Run Optimization</h4>
+                        <div class="text-xs text-slate-500 space-y-2 leading-relaxed">
+                            <p class="font-semibold text-slate-700">Platform: AWS / Graviton3 ARM Architecture</p>
+                            <p><strong>Inference Runtimes:</strong> Microservices run within <code class="bg-gray-100 px-1 rounded">c7g.2xlarge</code> environments to achieve immediate 40%+ pricing benefits over legacy x86 nodes.</p>
+                            <p><strong>Heavy ETL Processing:</strong> Data manipulation pipelines utilize <code class="bg-gray-100 px-1 rounded">m7g.xlarge</code> clusters to lower overall data operations run costs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border border-gray-200 p-4 rounded-lg flex items-center justify-between text-xs">
+                    <span class="text-slate-600">Spot &amp; Preemptible Integration Savings:</span>
+                    <span class="font-bold text-mobileyeBlue">60% – 80% Reduction on Validation Clusters</span>
+                </div>
+            </section>
+
+            <hr class="border-gray-100 my-12">
+
+
+            <!-- Section 4: Tier 3: Safety MCU Spec -->
+            <section id="tier3" class="doc-section mb-16">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-slate-100 rounded text-gray-500"><i data-lucide="shield" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900">4. Tier 3: Real-Time Safety MCU Island</h3>
+                </div>
+                <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                    Designed to execute absolute worst-case safe vehicle states. This tier is physically and electrically isolated from the main edge SoC systems to prevent complex OS kernel locks from inhibiting functional stopping commands.
+                </p>
+
+                <div class="border border-gray-200 rounded-lg p-6 mb-6">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Primary Safety Responsibilities</h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-gray-500 mt-0.5"></i>
+                            <span>Continuous hardware watchdog monitoring of the primary NVIDIA Jetson Orin SoC.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-gray-500 mt-0.5"></i>
+                            <span>Direct management of CAN-FD network packets communicating vehicle velocity commands to braking actuators.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-gray-500 mt-0.5"></i>
+                            <span>Autonomous hardware emergency signal override in <strong class="text-slate-900">&lt;1ms</strong> if the primary AI engine fails.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="border border-gray-200 p-5 rounded-lg text-sm bg-slate-50/50">
+                    <h5 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2">Target MCU Core Topologies</h5>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-500">
+                        <div>
+                            <p class="font-bold text-slate-700">ARM Cortex-R52 (Current Target)</p>
+                            <p>Proven, automotive-grade silicons featuring full ASIL-D certification. Extremely mature software toolchain support.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-700">RISC-V Automotive Core (Roadmap Path)</p>
+                            <p>EU Horizon Europe CHIPS funded implementations. Tracked for migration when safety-certified chips mature.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-100 my-12">
+
+
+            <!-- Section 5: Diagram -->
+            <section id="diagram" class="doc-section mb-16">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-slate-100 rounded text-gray-500"><i data-lucide="network" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900">5. Inter-Tier Topology Diagram</h3>
+                </div>
+                <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                    Visual representation of communication frequencies and protocol interfaces between the independent compute tiers as structured in the original <strong>"svashasan-compute-architecture.html"</strong> definitions.
+                </p>
+
+                <!-- Flowchart Simulation Card -->
+                <div class="border border-gray-200 rounded-lg p-6 bg-slate-50">
+                    
+                    <!-- Cloud -->
+                    <div class="border border-gray-200 rounded bg-white p-4 mb-4">
+                        <div class="text-xs font-bold text-mobileyeBlue uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i data-lucide="cloud" class="w-3.5 h-3.5 text-gray-500"></i> Tier 2: Cloud Infrastructure (GCP / AWS)
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded font-mono">x86 + A100/H100 (Training)</span>
+                            <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded font-mono">CARLA Simulation (GCP)</span>
+                            <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded font-mono">Graviton3 (ETL / Inference)</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center my-2 text-slate-400">
+                        <div class="flex flex-col items-center text-xs">
+                            <i data-lucide="arrow-down" class="w-4 h-4 text-gray-500 animate-bounce"></i>
+                            <span class="font-mono text-[10px]">OTA Update / Secure HTTPS</span>
+                        </div>
+                    </div>
+
+                    <!-- Vehicle Core -->
+                    <div class="border border-gray-200 rounded bg-white p-4 mb-4">
+                        <div class="text-xs font-bold text-green-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i data-lucide="cpu" class="w-3.5 h-3.5 text-gray-500"></i> Tier 1: In-Vehicle Compute (NVIDIA Jetson AGX Orin)
+                        </div>
+                        <p class="text-xs text-gray-500 mb-3">64GB LPDDR5 Shared System RAM</p>
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            <span class="bg-green-50 text-green-700 border border-green-100 px-2 py-1 rounded font-mono">Perception (TensorRT)</span>
+                            <span class="bg-green-50 text-green-700 border border-green-100 px-2 py-1 rounded font-mono">Planning / ROS2</span>
+                            <span class="bg-green-50 text-green-700 border border-green-100 px-2 py-1 rounded font-mono">Svashasan OS (Yocto)</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center my-2 text-slate-400">
+                        <div class="flex flex-col items-center text-xs">
+                            <i data-lucide="arrow-down" class="w-4 h-4 text-gray-500"></i>
+                            <span class="font-mono text-[10px] text-red-600 font-bold">CAN-FD Safety Bus (&lt;1ms latency)</span>
+                        </div>
+                    </div>
+
+                    <!-- Safety Island -->
+                    <div class="border border-gray-200 rounded bg-white p-4">
+                        <div class="text-xs font-bold text-red-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i data-lucide="shield" class="w-3.5 h-3.5 text-gray-500"></i> Tier 3: Functional Safety MCU (ARM Cortex-R52)
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            <span class="bg-red-50 text-red-700 border border-red-100 px-2 py-1 rounded font-mono">Watchdog Monitor</span>
+                            <span class="bg-red-50 text-red-700 border border-red-100 px-2 py-1 rounded font-mono">CAN-FD Manager</span>
+                            <span class="bg-red-50 text-red-700 border border-red-100 px-2 py-1 rounded font-mono">Emergency Stop Trigger</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <hr class="border-gray-100 my-12">
+
+
+            <!-- Section 6: Heterogeneous Rationale -->
+            <section id="rationale" class="doc-section mb-16">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-slate-100 rounded text-gray-500"><i data-lucide="scale" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900">6. Heterogeneous Rationale</h3>
+                </div>
+                <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                    AV deployment groups occasionally design architectures targeting a single ISA for simplicity. The table below details why a single-ISA approach fails production standards.
+                </p>
+
+                <div class="border border-gray-200 rounded-lg overflow-hidden text-sm">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-50 text-xs text-slate-700 uppercase tracking-wider border-b border-gray-200">
+                            <tr><th class="p-4">Alternative Strategy</th><th class="p-4">Operational Roadblock</th><th class="p-4">Direct Impact</th></tr>
+                        </thead>
+                        <tbody class="text-gray-600 divide-y divide-gray-100">
+                            <tr class="hover:bg-slate-50/50">
+                                <td class="p-4 font-semibold text-slate-900">Pure x86 Everywhere</td>
+                                <td class="p-4">No embedded hardware NPU, unsustainable power draw at the edge.</td>
+                                <td class="p-4 text-red-600 font-medium">Fails vehicle thermal limits.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50">
+                                <td class="p-4 font-semibold text-slate-900">Pure ARM Everywhere</td>
+                                <td class="p-4">Lacks PCIe GPU bus bandwidth in the cloud for training massive vision models.</td>
+                                <td class="p-4 text-red-600 font-medium">Severely throttles training pipelines.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50">
+                                <td class="p-4 font-semibold text-slate-900">No Dedicated Safety Island</td>
+                                <td class="p-4">An OS freeze on the primary SoC leaves no backup controller for vehicle actuation.</td>
+                                <td class="p-4 text-red-600 font-medium font-bold">Violates ISO 26262 ASIL-D.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <hr class="border-gray-100 my-12">
+
+
+            <!-- Section 7: Immediate Actions -->
+            <section id="actions" class="doc-section mb-16">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-slate-100 rounded text-gray-500"><i data-lucide="list-checks" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900">7. Immediate Actions</h3>
+                </div>
+                <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                    These priority actions are designed to move the platform from TRL 6 (Simulation-Verified) to TRL 7 (In-Vehicle Live Test Bed) using cost-efficient development models.
+                </p>
+
+                <div class="space-y-4">
+                    <div class="border border-gray-200 p-5 rounded-lg flex gap-4 items-start">
+                        <div class="bg-mobileyeBlue/10 text-mobileyeBlue font-mono font-bold px-2.5 py-1 rounded text-sm">01</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1">Procure NVIDIA Jetson AGX Orin Developer Hardware</h4>
+                            <p class="text-xs text-slate-500">Acquire developer hardware using the NVIDIA Inception program discount. This setup forms the primary physical target for the custom OS kernel layers.</p>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 p-5 rounded-lg flex gap-4 items-start">
+                        <div class="bg-mobileyeBlue/10 text-mobileyeBlue font-mono font-bold px-2.5 py-1 rounded text-sm">02</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1">Port Custom Yocto Linux Layers to ARM Target</h4>
+                            <p class="text-xs text-slate-500">Configure base Yocto Project recipes to align drivers specifically to the Jetson ARM Cortex-A78AE safety-extended cores.</p>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 p-5 rounded-lg flex gap-4 items-start">
+                        <div class="bg-mobileyeBlue/10 text-mobileyeBlue font-mono font-bold px-2.5 py-1 rounded text-sm">03</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1">Move Simulation Runs to GCP Spot Instances</h4>
+                            <p class="text-xs text-slate-500">Configure CARLA simulation jobs to execute on GCP Preemptible VMs, capturing immediate 60%–80% operational cost savings.</p>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 p-5 rounded-lg flex gap-4 items-start">
+                        <div class="bg-mobileyeBlue/10 text-mobileyeBlue font-mono font-bold px-2.5 py-1 rounded text-sm">04</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1">Compress Perception Models via TensorRT</h4>
+                            <p class="text-xs text-slate-500">Port existing PyTorch model layers into quantized TensorRT runtimes. Aim for 3x–5x performance gains over unquantized GPU execution.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-100 my-12">
+
+
+            <!-- Section 8: Glossary -->
+            <section id="glossary" class="doc-section mb-16">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-slate-100 rounded text-gray-500"><i data-lucide="book-open" class="w-6 h-6"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900">8. Technical Glossary</h3>
+                </div>
+
+                <div class="border border-gray-200 rounded-lg overflow-hidden text-xs">
+                    <table class="w-full text-left border-collapse bg-white">
+                        <thead class="bg-slate-50 border-b border-gray-200 font-semibold text-slate-700">
+                            <tr><th class="p-4">Term</th><th class="p-4">Definition &amp; AV Application</th></tr>
+                        </thead>
+                        <tbody class="text-gray-600 divide-y divide-gray-100">
+                            <tr>
+                                <td class="p-4 font-bold text-slate-900 font-mono">ASIL-D</td>
+                                <td class="p-4">Automotive Safety Integrity Level D. Represents the highest safety hazard classification assigned within the ISO 26262 functional safety framework.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-slate-900 font-mono">TOPS</td>
+                                <td class="p-4">Tera Operations Per Second. Standard mathematical unit tracking raw computing hardware execution performance limits for AI models.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-slate-900 font-mono">BSP</td>
+                                <td class="p-4">Board Support Package. The customized collection of device driver configurations, boot loaders, and microcode configurations required to run specific hardware architectures.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-slate-900 font-mono">CAN-FD</td>
+                                <td class="p-4">Controller Area Network with Flexible Data-Rate. High-performance automotive bus protocol expanding data payload capacities beyond legacy CAN standards.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+
+            <!-- Final Verdict -->
+            <section id="verdict" class="doc-section pt-8 border-t border-gray-200">
+                <div class="bg-slate-900 text-white rounded-xl p-8 relative overflow-hidden shadow-sm">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-mobileyeBlue rounded-full mix-blend-multiply filter blur-3xl opacity-20 -mr-20 -mt-20"></div>
+                    
+                    <h2 class="text-2xl font-bold mb-4 relative z-10 flex items-center gap-3 border-b border-white/10 pb-4">
+                        <i data-lucide="gavel" class="w-6 h-6 text-gray-400"></i> System Integration Verdict
+                    </h2>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-8 relative z-10">
+                        The heterogeneous compute architecture plan defined in <code class="bg-white/10 text-white px-1.5 py-0.5 rounded text-xs">svashasan-compute-architecture.html</code> provides a structurally compliant path for scaling Svashasan OS to vehicle-ready status. 
+                        By cleanly separating heavy training (GCP/x86), edge inference (AGX Orin), and critical control safety loops (Cortex-R52), the design satisfies both the strict real-time latencies of AV systems and the commercial cost constraints of a scaling startup.
+                    </p>
+
+                    <div class="relative z-10 mb-8 bg-white/5 border border-white/10 rounded-lg p-5 overflow-x-auto">
+                        <h4 class="text-slate-200 font-bold mb-4 text-sm border-b border-white/10 pb-2">Deployment Architecture Tree</h4>
+
+<pre class="text-[11px] leading-relaxed text-slate-300 font-mono whitespace-pre-wrap">
+CLOUD (GCP / AWS)
+├── x86 + A100/H100
+│   ├── CARLA Simulation
+│   ├── Model Training
+│   └── Data Processing
+│
+├── ARM Graviton3 (AWS c7g)
+│   ├── Inference Serving
+│   ├── Cost-Optimized Pipelines
+│   └── REST API Endpoints
+│
+└── OTA Updates / Model Sync
+    └── Secure HTTPS Channel
+            │
+            ▼
+IN-VEHICLE COMPUTE (Svashasan OS Core)
+├── NVIDIA Jetson AGX Orin
+│   ├── ARM Cortex-A78AE
+│   └── Ampere GPU
+│
+├── Perception Stack (TensorRT)
+├── Planning & Control (ROS2)
+├── OS Kernel & Orchestration (Svashasan OS)
+└── Unified Memory (64GB LPDDR5)
+            │
+            ▼
+SAFETY MCU (Functional Safety Island)
+├── ARM Cortex-R52 (ASIL-D)
+├── Watchdog & Fail-Safe Actuation
+├── CAN-FD Bus Management
+├── Sensor Health Monitoring
+└── Emergency Stop Generation
+</pre>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10 text-xs">
+                        <!-- Wins -->
+                        <div class="bg-white/5 border border-white/10 rounded-lg p-5">
+                            <h4 class="text-slate-200 font-bold mb-4 flex items-center gap-2 border-b border-white/10 pb-2"><i data-lucide="check" class="w-4 h-4 text-gray-400"></i> Primary Strengths</h4>
+                            <ul class="space-y-3 text-slate-300">
+                                <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0"></i> Complete ISO 26262 ASIL-D functional safety compliance</li>
+                                <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0"></i> Unified memory zero-copy inference pipeline (Orin 64GB)</li>
+                                <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0"></i> 60%-80% cost savings using Cloud Spot instances</li>
+                                <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0"></i> Decoupled real-time watchdog controls</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="bg-white/5 border border-white/10 rounded-lg p-5">
+                            <h4 class="text-slate-200 font-bold mb-4 flex items-center gap-2 border-b border-white/10 pb-2"><i data-lucide="alert-circle" class="w-4 h-4 text-gray-400"></i> Key Engineering Barriers</h4>
+                            <ul class="space-y-3 text-slate-300">
+                                <li class="flex items-start gap-2"><span class="bg-white/10 text-slate-300 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase mt-0.5">High</span> Managing complex cross-compilation custom Yocto kernel recipes</li>
+                                <li class="flex items-start gap-2"><span class="bg-white/10 text-slate-300 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase mt-0.5">Medium</span> Ensuring zero-copy pointers remain active inside custom ROS2 wrapper nodes</li>
+                                <li class="flex items-start gap-2"><span class="bg-white/10 text-slate-300 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase mt-0.5">Medium</span> Quantizing PyTorch vision layers without losing critical detection accuracy</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+
+    <!-- Footer (Identical to solutions.html) -->
+    <footer class="mt-auto py-8 border-t border-gray-100">
+        <div class="container mx-auto px-6 flex justify-center space-x-6 text-xs text-gray-500">
+            <a href="#" class="hover:underline">Svashasan &copy; 2026</a>
+            <a href="https://svashasan.com/privacy-policy" class="hover:underline">Privacy & Legal</a>
+            <a href="https://svashasan.com/vehicle-recalls" class="hover:underline">Vehicle Recalls</a>
+            <a href="mailto:namaste@svashasan.com" class="hover:underline">Contact</a>
+        </div>
+    </footer>
+
+
+    <script>
+        // Initialize Lucide Icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+
+        // Active State for Table of Contents based on scroll position
+        const sections = document.querySelectorAll('.doc-section');
+        const navLinks = document.querySelectorAll('aside nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('border-mobileyeBlue', 'text-mobileyeBlue', 'bg-slate-50', 'font-semibold');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('border-mobileyeBlue', 'text-mobileyeBlue', 'bg-slate-50', 'font-semibold');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
